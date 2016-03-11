@@ -19,7 +19,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '9#zhl!9if_)zz$xzpa5x8)mh0y)_$k4!@1fj$hd6w0lvunwtu4'
 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+# TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': ['templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -51,6 +66,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+ZAPPA_SETTINGS = {
+    'testing': {
+       's3_bucket': 'tmp.serverlesscode.com',
+       'settings_file': '~/code/django-zappa-example/hello_django/settings.py',
+    }
+}
+
 ROOT_URLCONF = 'hello_django.urls'
 
 WSGI_APPLICATION = 'hello_django.wsgi.application'
@@ -62,7 +84,8 @@ WSGI_APPLICATION = 'hello_django.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'test.db'),
+        'NAME': '/var/task/test.db',
+        #'NAME': os.path.join(BASE_DIR, 'test.db'),
     }
 }
 
