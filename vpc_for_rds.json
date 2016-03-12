@@ -394,6 +394,14 @@
         "RouteTablePublic": {
             "Description": "Route table public.",
             "Value": {"Ref": "RouteTablePublic"}
+        },
+        "DBInstanceAddress": {
+            "Description": "MySQL RDS instance IP",
+            "Value": {"Fn::GetAtt": ["DBInstance", "Endpoint.Address"]}
+        },
+        "DBInstancePort": {
+            "Description": "MySQL port",
+            "Value": {"Fn::GetAtt": ["DBInstance", "Endpoint.Port"]}
         }
     }
 }
