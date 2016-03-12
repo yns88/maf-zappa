@@ -81,6 +81,13 @@
                 "Domain": "vpc"
             }
         },
+        "DbSubnetGroup": {
+            "Type" : "AWS::RDS::DBSubnetGroup",
+            "Properties": {
+                "DBSubnetGroupDescription": "Subnets for RDS db instance",
+                "SubnetIds": [{"Ref": "SubnetAPrivate"}, {"Ref": "SubnetBPrivate"}]
+            }
+        },
         "SubnetAPublic": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
