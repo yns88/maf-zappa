@@ -51,6 +51,36 @@
                 "InternetGatewayId": {"Ref": "InternetGateway"}
             }
         },
+        "NatGatewayA": {
+            "DependsOn": ["VPCGatewayAttachment"],
+            "Type": "AWS::EC2::NatGateway",
+            "Properties": {
+                "AllocationId": {"Fn::GetAtt": ["NatEIPA", "AllocationId"]},
+                "SubnetId": {"Ref": "SubnetAPublic"}
+            }
+        },
+        "NatGatewayB": {
+            "DependsOn": ["VPCGatewayAttachment"],
+            "Type": "AWS::EC2::NatGateway",
+            "Properties": {
+                "AllocationId": {"Fn::GetAtt": ["NatEIPB", "AllocationId"]},
+                "SubnetId": {"Ref": "SubnetBPublic"}
+            }
+        },
+        "NatEIPA": {
+            "DependsOn": ["VPCGatewayAttachment"],
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+                "Domain": "vpc"
+            }
+        },
+        "NatEIPB": {
+            "DependsOn": ["VPCGatewayAttachment"],
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+                "Domain": "vpc"
+            }
+        },
         "SubnetAPublic": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
