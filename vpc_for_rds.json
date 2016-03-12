@@ -1,24 +1,12 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "VPC: public and private subnets in two availability zones with an RDS database, based on a cloudonaut.io template",
+    "Description": "VPC: public and private subnets in two availability zones, a cloudonaut.io template",
     "Parameters": {
-        "DBUser": {
-            "Description": "User for RDS",
-            "Type": "String",
-            "Default": "django"
-        },
-        "DBPassword": {
-            "Description": "Password for RDS database",
-            "Type": "String",
-            "MinLength": "12",
-            "Default": "1qaz2wsx3edc"
-        },
         "ClassB": {
             "Description": "Class B of VPC (10.XXX.0.0/16)",
             "Type": "String",
             "MinLength": "1",
-            "MaxLength": "3",
-            "Default": "10"
+            "MaxLength": "3"
         }
     },
     "Resources": {
@@ -49,77 +37,6 @@
             "Properties": {
                 "VpcId": {"Ref": "VPC"},
                 "InternetGatewayId": {"Ref": "InternetGateway"}
-            }
-        },
-        "NatGatewayA": {
-            "DependsOn": ["VPCGatewayAttachment"],
-            "Type": "AWS::EC2::NatGateway",
-            "Properties": {
-                "AllocationId": {"Fn::GetAtt": ["NatEIPA", "AllocationId"]},
-                "SubnetId": {"Ref": "SubnetAPublic"}
-            }
-        },
-        "NatGatewayB": {
-            "DependsOn": ["VPCGatewayAttachment"],
-            "Type": "AWS::EC2::NatGateway",
-            "Properties": {
-                "AllocationId": {"Fn::GetAtt": ["NatEIPB", "AllocationId"]},
-                "SubnetId": {"Ref": "SubnetBPublic"}
-            }
-        },
-        "NatEIPA": {
-            "DependsOn": ["VPCGatewayAttachment"],
-            "Type": "AWS::EC2::EIP",
-            "Properties": {
-                "Domain": "vpc"
-            }
-        },
-        "NatEIPB": {
-            "DependsOn": ["VPCGatewayAttachment"],
-            "Type": "AWS::EC2::EIP",
-            "Properties": {
-                "Domain": "vpc"
-            }
-        },
-        "DBSecurityGroup": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties" : {
-                "GroupDescription": "Open database for access",
-                "VpcId": {"Ref": "VPC"},
-                "SecurityGroupIngress" : [{
-                    "IpProtocol" : "tcp",
-                    "FromPort" : "3306",
-                    "ToPort" : "3306",
-                    "SourceSecurityGroupId" : { "Ref" : "LambdaExecSecurityGroup" }
-                }]
-            }
-        },
-        "LambdaExecSecurityGroup": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties" : {
-                "GroupDescription": "Lambda functions execute with this group",
-                "VpcId": {"Ref": "VPC"}
-            }
-        },
-        "DBInstance" : {
-            "Type": "AWS::RDS::DBInstance",
-            "Properties": {
-                "DBName"            : "djangohellodb",
-                "Engine"            : "MySQL",
-                "MultiAZ"           : false,
-                "MasterUsername"    : { "Ref" : "DBUser" },
-                "DBInstanceClass"   : "db.t2.micro",
-                "AllocatedStorage"  : 5,
-                "MasterUserPassword": { "Ref" : "DBPassword" },
-                "VPCSecurityGroups" : [{"Fn::GetAtt": ["DBSecurityGroup", "GroupId"]}],
-                "DBSubnetGroupName": {"Ref": "DbSubnetGroup"}
-            }
-        },
-        "DbSubnetGroup": {
-            "Type" : "AWS::RDS::DBSubnetGroup",
-            "Properties": {
-                "DBSubnetGroupDescription": "Subnets for RDS db instance",
-                "SubnetIds": [{"Ref": "SubnetAPrivate"}, {"Ref": "SubnetBPrivate"}]
             }
         },
         "SubnetAPublic": {
@@ -194,17 +111,7 @@
                 }]
             }
         },
-        "RouteTablePrivateA": {
-            "Type": "AWS::EC2::RouteTable",
-            "Properties": {
-                "VpcId": {"Ref": "VPC"},
-                "Tags": [{
-                    "Key": "Name",
-                    "Value": "Private"
-                }]
-            }
-        },
-        "RouteTablePrivateB": {
+        "RouteTablePrivate": {
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
                 "VpcId": {"Ref": "VPC"},
@@ -225,7 +132,7 @@
             "Type": "AWS::EC2::SubnetRouteTableAssociation",
             "Properties": {
                 "SubnetId": {"Ref": "SubnetAPrivate"},
-                "RouteTableId": {"Ref": "RouteTablePrivateA"}
+                "RouteTableId": {"Ref": "RouteTablePrivate"}
             }
         },
         "RouteTableAssociationBPublic": {
@@ -239,25 +146,7 @@
             "Type": "AWS::EC2::SubnetRouteTableAssociation",
             "Properties": {
                 "SubnetId": {"Ref": "SubnetBPrivate"},
-                "RouteTableId": {"Ref": "RouteTablePrivateB"}
-            }
-        },
-        "RouteTablePrivateNatGatewayA": {
-            "Type": "AWS::EC2::Route",
-            "DependsOn": "VPCGatewayAttachment",
-            "Properties": {
-                "RouteTableId": {"Ref": "RouteTablePrivateA"},
-                "DestinationCidrBlock": "0.0.0.0/0",
-                "NatGatewayId": {"Ref": "NatGatewayA"}
-            }
-        },
-        "RouteTablePrivateNatGatewayB": {
-            "Type": "AWS::EC2::Route",
-            "DependsOn": "VPCGatewayAttachment",
-            "Properties": {
-                "RouteTableId": {"Ref": "RouteTablePrivateB"},
-                "DestinationCidrBlock": "0.0.0.0/0",
-                "NatGatewayId": {"Ref": "NatGatewayB"}
+                "RouteTableId": {"Ref": "RouteTablePrivate"}
             }
         },
         "RouteTablePublicInternetRoute": {
