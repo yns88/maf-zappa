@@ -1,12 +1,24 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "VPC: public and private subnets in two availability zones, a cloudonaut.io template",
+    "Description": "VPC: public and private subnets in two availability zones with an RDS database, based on a cloudonaut.io template",
     "Parameters": {
+        "DBUser": {
+            "Description": "User for RDS",
+            "Type": "String",
+            "Default": "django"
+        },
+        "DBPassword": {
+            "Description": "Password for RDS database",
+            "Type": "String",
+            "MinLength": "12",
+            "Default": "1qaz2wsx3edc"
+        },
         "ClassB": {
             "Description": "Class B of VPC (10.XXX.0.0/16)",
             "Type": "String",
             "MinLength": "1",
-            "MaxLength": "3"
+            "MaxLength": "3",
+            "Default": "10"
         }
     },
     "Resources": {
