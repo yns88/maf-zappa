@@ -383,9 +383,13 @@
             "Description": "Subnet B private.",
             "Value": {"Ref": "SubnetBPrivate"}
         },
-        "RouteTablePrivate": {
+        "RouteTablePrivateA": {
             "Description": "Route table private.",
-            "Value": {"Ref": "RouteTablePrivate"}
+            "Value": {"Ref": "RouteTablePrivateA"}
+        },
+        "RouteTablePrivateB": {
+            "Description": "Route table private.",
+            "Value": {"Ref": "RouteTablePrivateB"}
         },
         "RouteTablePublic": {
             "Description": "Route table public.",
