@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "VPC: public and private subnets in two availability zones with an RDS database, based on a cloudonaut.io template",
+    "Description": "VPC: public and private subnets in two availability zones with an RDS database, based on a cloudonaut.io template. The template has been modified, but the original cloudonaut copy is available at https://github.com/widdix/aws-cf-templates/blob/master/vpc/vpc-2azs.json",
     "Parameters": {
         "DBUser": {
             "Description": "User for RDS",
