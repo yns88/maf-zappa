@@ -101,6 +101,20 @@
                 "VpcId": {"Ref": "VPC"}
             }
         },
+        "DBInstance" : {
+            "Type": "AWS::RDS::DBInstance",
+            "Properties": {
+                "DBName"            : "djangohellodb",
+                "Engine"            : "MySQL",
+                "MultiAZ"           : false,
+                "MasterUsername"    : { "Ref" : "DBUser" },
+                "DBInstanceClass"   : "db.t2.micro",
+                "AllocatedStorage"  : 5,
+                "MasterUserPassword": { "Ref" : "DBPassword" },
+                "VPCSecurityGroups" : [{"Fn::GetAtt": ["DBSecurityGroup", "GroupId"]}],
+                "DBSubnetGroupName" : {"Ref": "DbSubnetGroup"}
+            }
+        },
         "DbSubnetGroup": {
             "Type" : "AWS::RDS::DBSubnetGroup",
             "Properties": {
