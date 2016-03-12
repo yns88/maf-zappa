@@ -153,7 +153,17 @@
                 }]
             }
         },
-        "RouteTablePrivate": {
+        "RouteTablePrivateA": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {"Ref": "VPC"},
+                "Tags": [{
+                    "Key": "Name",
+                    "Value": "Private"
+                }]
+            }
+        },
+        "RouteTablePrivateB": {
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
                 "VpcId": {"Ref": "VPC"},
@@ -174,7 +184,7 @@
             "Type": "AWS::EC2::SubnetRouteTableAssociation",
             "Properties": {
                 "SubnetId": {"Ref": "SubnetAPrivate"},
-                "RouteTableId": {"Ref": "RouteTablePrivate"}
+                "RouteTableId": {"Ref": "RouteTablePrivateA"}
             }
         },
         "RouteTableAssociationBPublic": {
@@ -188,7 +198,25 @@
             "Type": "AWS::EC2::SubnetRouteTableAssociation",
             "Properties": {
                 "SubnetId": {"Ref": "SubnetBPrivate"},
-                "RouteTableId": {"Ref": "RouteTablePrivate"}
+                "RouteTableId": {"Ref": "RouteTablePrivateB"}
+            }
+        },
+        "RouteTablePrivateNatGatewayA": {
+            "Type": "AWS::EC2::Route",
+            "DependsOn": "VPCGatewayAttachment",
+            "Properties": {
+                "RouteTableId": {"Ref": "RouteTablePrivateA"},
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "NatGatewayId": {"Ref": "NatGatewayA"}
+            }
+        },
+        "RouteTablePrivateNatGatewayB": {
+            "Type": "AWS::EC2::Route",
+            "DependsOn": "VPCGatewayAttachment",
+            "Properties": {
+                "RouteTableId": {"Ref": "RouteTablePrivateB"},
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "NatGatewayId": {"Ref": "NatGatewayB"}
             }
         },
         "RouteTablePublicInternetRoute": {
