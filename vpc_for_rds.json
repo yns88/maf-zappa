@@ -91,6 +91,12 @@
                     "FromPort" : "3306",
                     "ToPort" : "3306",
                     "SourceSecurityGroupId" : { "Ref" : "LambdaExecSecurityGroup" }
+                },
+                {
+                    "IpProtocol" : "tcp",
+                    "FromPort" : "3306",
+                    "ToPort" : "3306",
+                    "SourceSecurityGroupId" : { "Ref" : "SshSecurityGroup" }
                 }]
             }
         },
@@ -99,6 +105,19 @@
             "Properties" : {
                 "GroupDescription": "Lambda functions execute with this group",
                 "VpcId": {"Ref": "VPC"}
+            }
+        },
+        "SshSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription": "sshable instance w/ db access",
+                "VpcId": {"Ref": "VPC"},
+                "SecurityGroupIngress" : [{
+                    "IpProtocol" : "tcp",
+                    "FromPort" : "22",
+                    "ToPort" : "22",
+                    "CidrIp" : "0.0.0.0/0"
+                }]
             }
         },
         "DBInstance" : {
