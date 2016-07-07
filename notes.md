@@ -31,7 +31,6 @@
 ## General Lambda issues
 - python 2.7 is all that's supported by default
 - shipping precompiled binaries for dependencies is tricky
-- 
 
 ## Django-Zappa issues
 - could only use us-east-1, trying us-west-2 caused problems
