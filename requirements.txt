@@ -1,3 +1,7 @@
 Django>=1.7
 django-zappa
-MySQL-python
+psycopg2
+django-storages
+boto
+
+git+git://github.com/yns88/myanimefigures-core.git

@@ -97,3 +97,11 @@ Session.vim
 # Linux trash folder which might appear on any partition or disk
 .Trash-*
 
+.idea/
+
+maf-zappa-dev-*.zip
+
+static/
+
+.scratch/
+secret.env
